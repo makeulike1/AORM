@@ -38,12 +38,25 @@ abstract class Table(name: String) {
 //    fun arrayDateTime(name: String) = registerColumn(Column(name, DbArrayDateTime()))
 
     //enums
-    fun <T : Enum<*>> enum8(name: String, enumType: KClass<T>) = registerColumn(Column(name, DbEnum8(enumType), this))
+    interface Value {
+        fun value(): String
+    }
 
+    fun <T : Enum<*>> enum8(name: String, enumType: KClass<T>) = registerColumn(Column(name, DbEnum8(enumType), this))
     fun <T : Enum<*>> enum8(name: String, enumType: KClass<T>, enumMapping: LinkedHashMap<String, Int>) = registerColumn(Column(name, DbEnum8(enumMapping, enumType), this))
+
+    fun <T> enum8ext(name: String, enumType: KClass<T>)
+            where T : Enum<*>, T : Value = registerColumn(Column(name, DbEnum8Ext(enumType), this))
+    fun <T> enum8ext(name: String, enumType: KClass<T>, enumMapping: LinkedHashMap<String, Int>)
+            where T : Enum<*>, T : Value = registerColumn(Column(name, DbEnum8Ext(enumMapping, enumType), this))
 
     fun <T : Enum<*>> enum16(name: String, enumType: KClass<T>) = registerColumn(Column(name, DbEnum16(enumType), this))
     fun <T : Enum<*>> enum16(name: String, enumType: KClass<T>, enumMapping: LinkedHashMap<String, Int>) = registerColumn(Column(name, DbEnum16(enumMapping, enumType), this))
+
+    fun <T> enum16ext(name: String, enumType: KClass<T>)
+            where T : Enum<*>, T : Value = registerColumn(Column(name, DbEnum16Ext(enumType), this))
+    fun <T> enum16ext(name: String, enumType: KClass<T>, enumMapping: LinkedHashMap<String, Int>)
+            where T : Enum<*>, T : Value = registerColumn(Column(name, DbEnum16Ext(enumMapping, enumType), this))
 
     //int8
     fun int8(name: String) = registerColumn(Column(name, DbInt8(), this))

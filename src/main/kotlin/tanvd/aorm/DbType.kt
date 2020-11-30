@@ -73,6 +73,28 @@ abstract class DbEnum<T : Enum<*>>(val enumMapping: LinkedHashMap<String, Int>, 
     }
 }
 
+abstract class DbEnumExt<T>(val enumMapping: LinkedHashMap<String, Int>, val enumType: KClass<T>) : DbPrimitiveType<T>()
+        where T : Enum<*>, T : Table.Value {
+
+    override val defaultValue: T = enumType.java.enumConstants.first()
+
+    protected fun mappingToSql() = enumMapping.entries.joinToString { "\'${it.key}\' = ${it.value}" }
+
+    override fun getValue(name: String, result: ResultSet): T = enumType.java.enumConstants.first { it.value() == result.getString(name) }
+
+    override fun getValue(index: Int, result: ResultSet): T = enumType.java.enumConstants.first { it.value() == result.getString(index) }
+
+    override fun setValue(index: Int, statement: PreparedStatement, value: T) {
+        statement.setString(index, value.value())
+    }
+
+    override fun toStringValue(value: T): String = "'${value.value()}'"
+
+    override fun toArray(): DbArrayType<T> {
+        throw NotImplementedError()
+    }
+}
+
 class DbEnum8<T : Enum<*>>(enumMapping: LinkedHashMap<String, Int>, enumType: KClass<T>) : DbEnum<T>(enumMapping, enumType) {
     constructor(enumType: KClass<T>) : this(LinkedHashMap<String, Int>().also { map ->
         enumType.java.enumConstants.forEach {
@@ -83,10 +105,32 @@ class DbEnum8<T : Enum<*>>(enumMapping: LinkedHashMap<String, Int>, enumType: KC
     override fun toSqlName(): String = "Enum8(${mappingToSql()})"
 }
 
+class DbEnum8Ext<T>(enumMapping: LinkedHashMap<String, Int>, enumType: KClass<T>) : DbEnumExt<T>(enumMapping, enumType)
+        where T : Enum<*>, T : Table.Value {
+    constructor(enumType: KClass<T>) : this(LinkedHashMap<String, Int>().also { map ->
+        enumType.java.enumConstants.forEach {
+            map[it.value()] = it.ordinal
+        }
+    }, enumType)
+
+    override fun toSqlName(): String = "Enum8(${mappingToSql()})"
+}
+
 class DbEnum16<T : Enum<*>>(enumMapping: LinkedHashMap<String, Int>, enumType: KClass<T>) : DbEnum<T>(enumMapping, enumType) {
     constructor(enumType: KClass<T>) : this(LinkedHashMap<String, Int>().also { map ->
         enumType.java.enumConstants.forEach {
             map[it.name] = it.ordinal
+        }
+    }, enumType)
+
+    override fun toSqlName(): String = "Enum16(${mappingToSql()})"
+}
+
+class DbEnum16Ext<T>(enumMapping: LinkedHashMap<String, Int>, enumType: KClass<T>) : DbEnumExt<T>(enumMapping, enumType)
+        where T : Enum<*>, T : Table.Value {
+    constructor(enumType: KClass<T>) : this(LinkedHashMap<String, Int>().also { map ->
+        enumType.java.enumConstants.forEach {
+            map[it.value()] = it.ordinal
         }
     }, enumType)
 

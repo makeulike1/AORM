@@ -74,6 +74,9 @@ class TypesTest : AormTestBase() {
                     AllTypesTable.enum8Col to TestEnumFirst.first_enum,
                     AllTypesTable.enum16Col to TestEnumFirst.second_enum,
 
+                    AllTypesTable.enum8Ext to TestEnumValue.first,
+                    AllTypesTable.enum16Ext to TestEnumValue.second,
+
                     AllTypesTable.boolCol to true,
                     AllTypesTable.arrayBoolCol to listOf(true, false),
 
@@ -133,6 +136,9 @@ class TypesTest : AormTestBase() {
                     (AllTypesTable.enum8Col eq TestEnumFirst.first_enum) and
                     (AllTypesTable.enum16Col eq TestEnumFirst.second_enum) and
 
+                    (AllTypesTable.enum8Ext eq TestEnumValue.first) and
+                    (AllTypesTable.enum16Ext eq TestEnumValue.second) and
+
                     (AllTypesTable.boolCol eq true) and
                     (AllTypesTable.arrayBoolCol has true) and
                     (AllTypesTable.arrayBoolCol has false) and
@@ -190,6 +196,9 @@ class TypesTest : AormTestBase() {
                     AllTypesTable.enum8Col to TestEnumFirst.first_enum,
                     AllTypesTable.enum16Col to TestEnumFirst.second_enum,
 
+                    AllTypesTable.enum8Ext to TestEnumValue.first,
+                    AllTypesTable.enum16Ext to TestEnumValue.second,
+
                     AllTypesTable.boolCol to true,
                     AllTypesTable.arrayBoolCol to listOf(true, false),
 
@@ -199,7 +208,7 @@ class TypesTest : AormTestBase() {
 
 
             val sql = InsertClickhouse.constructInsert(InsertExpression(AllTypesTable, AllTypesTable.columns, arrayListOf(row)))
-            Assertions.assertEquals("INSERT INTO all_types_table (date_col, arrayDate_col, datetime_col, enum8_col, enum16_col, int8_col, arrayInt8_col, uint8_col, arrayUInt8_col, int16_col, arrayInt16_col, uint16_col, arrayUInt16_col, int32_col, arrayInt32_col, uint32_col, arrayUInt32_col, int64_col, arrayInt64_col, uint64_col, arrayUInt64_col, float32_col, arrayFloat32_col, float64_col, arrayFloat64_col, decimal_col, arrayDecimal_col, bool_col, arrayBoolean_col, string_col, arrayString_col) VALUES ('2000-01-01', ['2001-01-01', '2002-02-02'], '2000-01-01 12:00:00', first_enum, second_enum, 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1.0, [1.0, 2.0], 1.0, [1.0, 2.0], 1234.56, [1234.56, 78.90], 1, [1, 0], 'string', ['string1', 'string2']);", sql)
+            Assertions.assertEquals("INSERT INTO all_types_table (date_col, arrayDate_col, datetime_col, enum8_col, enum16_col, enum8_ext, enum16_ext, int8_col, arrayInt8_col, uint8_col, arrayUInt8_col, int16_col, arrayInt16_col, uint16_col, arrayUInt16_col, int32_col, arrayInt32_col, uint32_col, arrayUInt32_col, int64_col, arrayInt64_col, uint64_col, arrayUInt64_col, float32_col, arrayFloat32_col, float64_col, arrayFloat64_col, decimal_col, arrayDecimal_col, bool_col, arrayBoolean_col, string_col, arrayString_col) VALUES ('2000-01-01', ['2001-01-01', '2002-02-02'], '2000-01-01 12:00:00', first_enum, second_enum, '<f.>', '<s.>', 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1, [1, 2], 1.0, [1.0, 2.0], 1.0, [1.0, 2.0], 1234.56, [1234.56, 78.90], 1, [1, 0], 'string', ['string1', 'string2']);", sql)
         }
     }
 
@@ -258,6 +267,9 @@ class TypesTest : AormTestBase() {
                     (AllTypesTable.enum8Col eq TestEnumFirst.first_enum) and
                     (AllTypesTable.enum16Col eq TestEnumFirst.second_enum) and
 
+                    (AllTypesTable.enum8Ext eq TestEnumValue.first) and
+                    (AllTypesTable.enum16Ext eq TestEnumValue.second) and
+
                     (AllTypesTable.boolCol eq true) and
                     (AllTypesTable.arrayBoolCol has true) and
                     (AllTypesTable.arrayBoolCol has false) and
@@ -267,7 +279,7 @@ class TypesTest : AormTestBase() {
                     (AllTypesTable.arrayStringCol has "string2"))
 
             val sql = QueryClickhouse.constructQuery(query)
-            Assertions.assertEquals("SELECT date_col, arrayDate_col, datetime_col, enum8_col, enum16_col, int8_col, arrayInt8_col, uint8_col, arrayUInt8_col, int16_col, arrayInt16_col, uint16_col, arrayUInt16_col, int32_col, arrayInt32_col, uint32_col, arrayUInt32_col, int64_col, arrayInt64_col, uint64_col, arrayUInt64_col, float32_col, arrayFloat32_col, float64_col, arrayFloat64_col, decimal_col, arrayDecimal_col, bool_col, arrayBoolean_col, string_col, arrayString_col FROM all_types_table WHERE (((((((((((((((((((((((((((((((((((((((((((((date_col = '2000-01-01') AND (has(arrayDate_col, '2001-01-01'))) AND (has(arrayDate_col, '2002-02-02'))) AND (datetime_col = '2000-01-01 12:00:00')) AND (int8_col = 1)) AND (has(arrayInt8_col, 1))) AND (has(arrayInt8_col, 2))) AND (uint8_col = 1)) AND (has(arrayUInt8_col, 1))) AND (has(arrayUInt8_col, 2))) AND (int16_col = 1)) AND (has(arrayInt16_col, 1))) AND (has(arrayInt16_col, 2))) AND (uint16_col = 1)) AND (has(arrayUInt16_col, 1))) AND (has(arrayUInt16_col, 2))) AND (int32_col = 1)) AND (has(arrayInt32_col, 1))) AND (has(arrayInt32_col, 2))) AND (uint32_col = 1)) AND (has(arrayUInt32_col, 1))) AND (has(arrayUInt32_col, 2))) AND (int64_col = 1)) AND (has(arrayInt64_col, 1))) AND (has(arrayInt64_col, 2))) AND (uint64_col = 1)) AND (has(arrayUInt64_col, 1))) AND (has(arrayUInt64_col, 2))) AND (float32_col = 1.0)) AND (has(arrayFloat32_col, 1.0))) AND (has(arrayFloat32_col, 2.0))) AND (float64_col = 1.0)) AND (has(arrayFloat64_col, 1.0))) AND (has(arrayFloat64_col, 2.0))) AND (decimal_col = toDecimal64(1234.56, 2))) AND (has(arrayDecimal_col, toDecimal64(1234.56, 2)))) AND (has(arrayDecimal_col, toDecimal64(78.9, 2)))) AND (enum8_col = first_enum)) AND (enum16_col = second_enum)) AND (bool_col = 1)) AND (has(arrayBoolean_col, 1))) AND (has(arrayBoolean_col, 0))) AND (string_col = 'string')) AND (has(arrayString_col, 'string1'))) AND (has(arrayString_col, 'string2'))) ;", sql)
+            Assertions.assertEquals("SELECT date_col, arrayDate_col, datetime_col, enum8_col, enum16_col, enum8_ext, enum16_ext, int8_col, arrayInt8_col, uint8_col, arrayUInt8_col, int16_col, arrayInt16_col, uint16_col, arrayUInt16_col, int32_col, arrayInt32_col, uint32_col, arrayUInt32_col, int64_col, arrayInt64_col, uint64_col, arrayUInt64_col, float32_col, arrayFloat32_col, float64_col, arrayFloat64_col, decimal_col, arrayDecimal_col, bool_col, arrayBoolean_col, string_col, arrayString_col FROM all_types_table WHERE (((((((((((((((((((((((((((((((((((((((((((((((date_col = '2000-01-01') AND (has(arrayDate_col, '2001-01-01'))) AND (has(arrayDate_col, '2002-02-02'))) AND (datetime_col = '2000-01-01 12:00:00')) AND (int8_col = 1)) AND (has(arrayInt8_col, 1))) AND (has(arrayInt8_col, 2))) AND (uint8_col = 1)) AND (has(arrayUInt8_col, 1))) AND (has(arrayUInt8_col, 2))) AND (int16_col = 1)) AND (has(arrayInt16_col, 1))) AND (has(arrayInt16_col, 2))) AND (uint16_col = 1)) AND (has(arrayUInt16_col, 1))) AND (has(arrayUInt16_col, 2))) AND (int32_col = 1)) AND (has(arrayInt32_col, 1))) AND (has(arrayInt32_col, 2))) AND (uint32_col = 1)) AND (has(arrayUInt32_col, 1))) AND (has(arrayUInt32_col, 2))) AND (int64_col = 1)) AND (has(arrayInt64_col, 1))) AND (has(arrayInt64_col, 2))) AND (uint64_col = 1)) AND (has(arrayUInt64_col, 1))) AND (has(arrayUInt64_col, 2))) AND (float32_col = 1.0)) AND (has(arrayFloat32_col, 1.0))) AND (has(arrayFloat32_col, 2.0))) AND (float64_col = 1.0)) AND (has(arrayFloat64_col, 1.0))) AND (has(arrayFloat64_col, 2.0))) AND (decimal_col = toDecimal64(1234.56, 2))) AND (has(arrayDecimal_col, toDecimal64(1234.56, 2)))) AND (has(arrayDecimal_col, toDecimal64(78.9, 2)))) AND (enum8_col = first_enum)) AND (enum16_col = second_enum)) AND (enum8_ext = '<f.>')) AND (enum16_ext = '<s.>')) AND (bool_col = 1)) AND (has(arrayBoolean_col, 1))) AND (has(arrayBoolean_col, 0))) AND (string_col = 'string')) AND (has(arrayString_col, 'string1'))) AND (has(arrayString_col, 'string2'))) ;", sql)
         }
     }
 }
@@ -276,6 +288,15 @@ class TypesTest : AormTestBase() {
 enum class TestEnumFirst {
     first_enum,
     second_enum
+}
+
+enum class TestEnumValue(val value: String): Table.Value {
+    first("<f.>"),
+    second("<s.>");
+
+    override fun value(): String {
+        return this.value
+    }
 }
 
 object AllTypesTable : Table("all_types_table") {
@@ -288,6 +309,9 @@ object AllTypesTable : Table("all_types_table") {
 
     val enum8Col = enum8("enum8_col", TestEnumFirst::class)
     val enum16Col = enum16("enum16_col", TestEnumFirst::class)
+
+    val enum8Ext = enum8ext("enum8_ext", TestEnumValue::class)
+    val enum16Ext = enum16ext("enum16_ext", TestEnumValue::class)
 
     val int8Col = int8("int8_col")
     val arrayInt8Col = arrayInt8("arrayInt8_col")
