@@ -10,7 +10,9 @@ class Column<E : Any, out T : DbType<E>>(val name: String, type: T, val table: T
 
     override fun toSelectListDef(): String = ClickHouseUtil.escape(name)
 
-    fun toSqlDef(): String = "${ClickHouseUtil.escape(name)} ${type.toSqlName()}"
+    // to with backtick(`)
+    // fun toSqlDef(): String = "${ClickHouseUtil.escape(name)} ${type.toSqlName()}"
+    fun toSqlDef(): String = "`${ClickHouseUtil.escape(name)}` ${type.toSqlName()}"
 
     var defaultFunction: (() -> E)? = default
 
